@@ -1,0 +1,8 @@
+import enum
+
+
+class MachineType(int, enum.Enum):
+    MACHINE_TYPE_WASHING_MACHINE = 1
+    MACHINE_TYPE_SHOE_WASHING_MACHINE = 2
+    MACHINE_TYPE_FUTON_WASHING_MACHINE = 3
+    MACHINE_TYPE_DRYER = 4
