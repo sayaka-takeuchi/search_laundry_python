@@ -6,7 +6,7 @@ from database import Base
 class LaundryModel(Base):
     __tablename__ = "laundry"
 
-    laundry_id = Column(Integer, primary_key=True, auto_increment=True)
+    laundry_id = Column(Integer, primary_key=True, autoincrement=True)
     laundry_name = Column(String(255), nullable=False)
     laundry_address = Column(String(255), nullable=False)
     laundry_opening_date = Column(Date, nullable=False)

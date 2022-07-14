@@ -10,7 +10,7 @@ class UserModel(Base):
     登録されたユーザーの情報を格納するモデル
     """
 
-    user_id = Column(Integer, primary_key=True, auto_increment=True)
+    user_id = Column(Integer, primary_key=True, autoincrement=True)
     user_nickname = Column(String(255), nullable=False)
     user_mail_address = Column(String(255), nullable=False)
     user_password = Column(String(255), nullable=False)
