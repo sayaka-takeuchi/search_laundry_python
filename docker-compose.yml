@@ -7,18 +7,21 @@ services:
       - "8001:8001"
     volumes:
       - .:/app
+      - /Users/takeuchisayaka/Downloads/search-laundry-python-adfde6c2991f.json:/app/key.json:ro
     links:
       - db
     # command: ["./wait-for-mysql.sh", "db", "python", "app.py"]
     depends_on:
       - db
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /app/key.json
 
   db:
     image: "mysql:5.7"
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: search_laundry_python_development
+      MYSQL_DATABASE: search_laundry_python
       # 仮想コンテナにアクセスするためのポート番号
     ports:
       - "3308:3306"
