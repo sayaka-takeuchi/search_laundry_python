@@ -1,4 +1,4 @@
-from datetime import date, time
+from datetime import date, time, datetime
 from typing import Optional
 from pydantic import BaseModel, Field
 
@@ -18,5 +18,15 @@ class LaundryCreateResponseSchema(LaundryCreateSchema):
         orm_mode = True
 
 
+class LaundryUpdateSchema(LaundryCreateSchema):
+    pass
+
+
+class LaundryUpdateResponseSchema(LaundryCreateResponseSchema):
+    pass
+
+
 class LaundrySchema(LaundryCreateResponseSchema):
     laundry_image_name: Optional[str]
+    is_deleted: bool
+    deleted_at: Optional[datetime]

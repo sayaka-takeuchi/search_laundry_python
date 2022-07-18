@@ -27,3 +27,18 @@ def upload_blob(storage_object_name: str, source_file_name: str, bucket_name: st
         )
     finally:
         os.remove(source_file_name)
+
+
+def delete_blob(bucket_name, blob_name):
+    """Deletes a blob from the bucket."""
+    # bucket_name = "your-bucket-name"
+    # blob_name = "your-object-name"
+
+    storage_client = storage.Client.from_service_account_json(
+        settings.google_application_credentials)
+
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+    blob.delete()
+
+    print(f"Blob {blob_name} deleted.")

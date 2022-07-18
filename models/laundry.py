@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Date, Time
+from sqlalchemy import Boolean, Column, DateTime, Integer, String, Date, Time
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -13,6 +13,8 @@ class LaundryModel(Base):
     laundry_open_time = Column(Time, nullable=False)
     laundry_close_time = Column(Time, nullable=False)
     laundry_image_name = Column(String(255), nullable=True)
+    is_deleted = Column(Boolean, nullable=False, default=False)
+    deleted_at = Column(DateTime, nullable=True)
 
     laundry_comments = relationship("CommentModel",
                                     cascade="all, delete-orphan",

@@ -8,7 +8,7 @@ from helpers import gcp_helper
 from helpers.exceptions import raise_not_found
 from helpers.file_helper import save_upload_file
 from models.laundry import LaundryModel
-from schemas.laundry import LaundryCreateSchema
+from schemas.laundry import LaundryCreateSchema, LaundryUpdateSchema
 
 LAUNDRY_IMAGE_DIR_PATH = 'static/uploads/laundry/'
 
@@ -22,7 +22,7 @@ def get_laundries(db: Session) -> List[LaundryModel]:
     return db.query(LaundryModel).all()
 
 
-def register_laundry(db: Session, new_laundry: LaundryCreateSchema) -> LaundryModel:
+def register_laundry_without_image(db: Session, new_laundry: LaundryCreateSchema) -> LaundryModel:
     db_laundry = LaundryModel(**new_laundry.dict())
     db.add(db_laundry)
     db.commit()
@@ -30,8 +30,30 @@ def register_laundry(db: Session, new_laundry: LaundryCreateSchema) -> LaundryMo
     return db_laundry
 
 
+def update_laundry_without_image(db: Session, laundry_id: int,
+                                 new_laundry: LaundryUpdateSchema) -> LaundryModel:
+    db_laundry: LaundryModel = get_laundry(db=db, laundry_id=laundry_id)
+    db_laundry = LaundryModel(**new_laundry.dict())
+    db_laundry.laundry_id = laundry_id
+    db.commit()
+    print("db_laundry", db_laundry)
+    print("aiuaiuhfgarey89t3oijagrji")
+    return db_laundry
+
+
+def delete_laundry(db: Session, laundry_id: int):
+    laundry: LaundryModel = get_laundry(db=db, laundry_id=laundry_id)
+    laundry.is_deleted = True
+    laundry.deleted_at = datetime.utcnow()
+    db.commit()
+
+
 async def register_laundry_image(laundry_id: int, db: Session, file: UploadFile):
     db_laundry: LaundryModel = get_laundry(db=db, laundry_id=laundry_id)
+    # 画像更新時は元の画像を削除してから更新する
+    if db_laundry.laundry_image_name is not None:
+        gcp_helper.delete_blob(bucket_name=gcp_helper.BucketName.laundry_images,
+                               blob_name=db_laundry.laundry_image_name)
     filename_without_extension = file.filename
     file_type = file.content_type.split("/")[1]
     file_name = datetime.utcnow().strftime("%Y%m%d%H%M%SZ-") + \
