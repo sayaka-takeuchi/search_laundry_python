@@ -11,8 +11,8 @@ router = APIRouter()
 
 
 @router.get("/", tags=["laundry"], response_model=List[LaundrySchema])
-def get_laundries(db: Session = Depends(get_db)):
-    laundries = laundry.get_laundries(db=db)
+def get_laundries(db: Session = Depends(get_db), offset: int = 0, limit: int = 100):
+    laundries = laundry.get_laundries(db=db, offset=offset, limit=limit)
     return [LaundrySchema.from_orm(laundry) for laundry in laundries]
 
 

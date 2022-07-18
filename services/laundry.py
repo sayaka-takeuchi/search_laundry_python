@@ -18,8 +18,10 @@ def get_laundry(laundry_id: int, db: Session):
     return db.query(LaundryModel).get(laundry_id)
 
 
-def get_laundries(db: Session) -> List[LaundryModel]:
-    return db.query(LaundryModel).all()
+def get_laundries(db: Session, offset: int = 0, limit: int = 100) -> List[LaundryModel]:
+    return db.query(LaundryModel).filter(
+        LaundryModel.is_deleted.is_(False)
+    ).offset(offset).limit(limit).all()
 
 
 def register_laundry_without_image(db: Session, new_laundry: LaundryCreateSchema) -> LaundryModel:
