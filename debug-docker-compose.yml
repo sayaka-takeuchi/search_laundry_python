@@ -1,0 +1,16 @@
+debug-docker-compose.ymlversion: "3"
+
+services:
+  web-debug:
+    build:
+      context: .
+      dockerfile: ./debug.Dockerfile
+    restart: always
+    volumes:
+      - .:/app
+    expose:
+      - "8000"
+      - "5678"
+    ports:
+      - 8000:8000
+      - 5678:5678
