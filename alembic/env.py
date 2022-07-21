@@ -1,12 +1,12 @@
-import models
-from database import settings, Base
-from logging.config import fileConfig
 import os
 import sys
 
 from alembic import context
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+
+from database import settings, Base
+from logging.config import fileConfig
 
 
 sys.path.insert(0, os.path.realpath(
