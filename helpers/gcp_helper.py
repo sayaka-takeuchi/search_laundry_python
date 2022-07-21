@@ -13,7 +13,10 @@ class BucketName(str, enum.Enum):
 
 
 def upload_blob(storage_object_name: str, source_file_name: str, bucket_name: str):
-    """Uploads a file to the bucket."""
+    """
+    Uploads a file to the bucket.
+    https://cloud.google.com/storage/docs/samples/storage-upload-file?hl=ja
+    """
     try:
         storage_client = storage.Client.from_service_account_json(
             settings.google_application_credentials)
@@ -30,7 +33,10 @@ def upload_blob(storage_object_name: str, source_file_name: str, bucket_name: st
 
 
 def delete_blob(bucket_name, blob_name):
-    """Deletes a blob from the bucket."""
+    """
+    Deletes a blob from the bucket.
+    https://cloud.google.com/storage/docs/deleting-objects?hl=ja
+    """
     # bucket_name = "your-bucket-name"
     # blob_name = "your-object-name"
 
