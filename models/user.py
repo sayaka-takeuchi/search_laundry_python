@@ -14,7 +14,7 @@ class UserModel(Base):
     user_nickname = Column(String(255), nullable=False)
     user_mail_address = Column(String(255), nullable=False)
     user_password = Column(String(255), nullable=False)
-
+    user_refresh_token = Column(String(255), nullable=False, default="")
     user_comments = relationship("CommentModel",
                                  cascade="all, delete-orphan",
                                  lazy="dynamic",

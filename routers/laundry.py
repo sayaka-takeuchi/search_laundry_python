@@ -3,11 +3,11 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from database import get_db
-from helpers.auth_helper import get_current_active_user
-from models.user import UserModel
+from helpers import auth_helper
 from schemas.comment import CommentCreateSchema
 from schemas.laundry import LaundryCreateResponseSchema, LaundryCreateSchema, LaundrySchema, LaundryUpdateResponseSchema, LaundryUpdateSchema
 from schemas.result import Result
+from schemas.user import UserSchema
 from services import comment, laundry
 
 router = APIRouter()
@@ -39,7 +39,8 @@ async def register_laundry_image(laundry_id: int,
 @router.post("/{laundry_id}/comment", tags=["comment"])
 def create_comment(laundry_id: int,
                    new_comment: CommentCreateSchema,
-                   current_user: UserModel = Depends(get_current_active_user),
+                   current_user: UserSchema = Depends(
+                       auth_helper.get_current_user),
                    db: Session = Depends(get_db)):
     created_comment = comment.create_comment(db=db,
                                              new_comment=new_comment,
