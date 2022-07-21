@@ -1,4 +1,4 @@
-debug-docker-compose.ymlversion: "3"
+version: "3"
 
 services:
   web-debug:
