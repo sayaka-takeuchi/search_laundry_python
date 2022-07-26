@@ -6,8 +6,13 @@ services:
       context: .
       dockerfile: ./debug.Dockerfile
     restart: always
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /key.json
     volumes:
       - .:/app
+      # :ro → read only
+      - ${GOOGLE_APPLICATION_CREDENTIALS}:/key.json:ro
+
     expose:
       - "8000"
       - "5678"
