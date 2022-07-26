@@ -52,19 +52,22 @@ def delete_laundry(db: Session, laundry_id: int):
 
 async def register_laundry_image(laundry_id: int, db: Session, file: UploadFile):
     db_laundry: LaundryModel = get_laundry(db=db, laundry_id=laundry_id)
-    # 画像更新時は元の画像を削除してから更新する
-    if db_laundry.laundry_image_name is not None:
-        gcp_helper.delete_blob(bucket_name=gcp_helper.BucketName.laundry_images,
-                               blob_name=db_laundry.laundry_image_name)
-    filename_without_extension = file.filename
-    file_type = file.content_type.split("/")[1]
-    file_name = datetime.utcnow().strftime("%Y%m%d%H%M%SZ-") + \
-        filename_without_extension + file_type
-    file_path = LAUNDRY_IMAGE_DIR_PATH + filename_without_extension
+    if len(file.filename.split(".")) > 1:
+        file_name = datetime.utcnow().strftime("%Y%m%d%H%M%SZ-") + file.filename
+    else:
+        file_type = file.content_type.split("/")[1]
+        file_name = datetime.utcnow().strftime("%Y%m%d%H%M%SZ-") + \
+            file.filename + "." + file_type
+
+    file_path = LAUNDRY_IMAGE_DIR_PATH + file_name
     await save_upload_file(upload_file=file,
                            dir_path=LAUNDRY_IMAGE_DIR_PATH, file_path=file_path)
     gcp_helper.upload_blob(storage_object_name=file_name, source_file_name=file_path,
                            bucket_name=gcp_helper.BucketName.laundry_images)
+    # 画像更新時は元の画像を削除してからdbのlaundry_image_nameを更新する
+    if db_laundry.laundry_image_name is not None:
+        gcp_helper.delete_blob(bucket_name=gcp_helper.BucketName.laundry_images,
+                               blob_name=db_laundry.laundry_image_name)
     db_laundry.laundry_image_name = file_name
     db.commit()
     return db_laundry
