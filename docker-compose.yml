@@ -25,6 +25,8 @@ services:
       # 仮想コンテナにアクセスするためのポート番号
     ports:
       - "3308:3306"
+    volumes:
+      - ./mysql.cnf:/etc/mysql/conf.d/mysql.cnf
   adminer:
     image: adminer
     restart: always
