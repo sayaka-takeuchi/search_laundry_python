@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from helpers import gcp_helper
 from helpers.exceptions import raise_not_found
 from helpers.file_helper import save_upload_file
+from helpers.laundry_helper import convert_to_dict_and_delete_element
 from models.laundry import LaundryModel
 from models.laundry_to_machine_type_model import LaundryToMachineTypeModel
 from schemas.laundry import LaundryCreateSchema, LaundryMachineTypeSchema, LaundryUpdateSchema
@@ -26,9 +27,9 @@ def get_laundries(db: Session, offset: int = 0, limit: int = 100) -> List[Laundr
 
 
 def register_laundry_without_image(db: Session, new_laundry: LaundryCreateSchema) -> LaundryModel:
-    dect_new_laundry = new_laundry.dict()
-    del dect_new_laundry["laundry_machine_types"]
-    db_laundry = LaundryModel(**dect_new_laundry)
+    new_laundry_dict = convert_to_dict_and_delete_element(
+        original_data=new_laundry)
+    db_laundry = LaundryModel(**new_laundry_dict)
     db.add(db_laundry)
     db.flush()
     for machine_info in new_laundry.laundry_machine_types:
@@ -53,8 +54,8 @@ def register_laundry_machine_type(laundry_id: int, db: Session, machine_info: La
 def update_laundry_without_image(db: Session, laundry_id: int,
                                  new_laundry: LaundryUpdateSchema) -> LaundryModel:
     db_laundry: LaundryModel = get_laundry(db=db, laundry_id=laundry_id)
-    new_laundry_dict = new_laundry.dict()
-    del new_laundry_dict["laundry_machine_types"]
+    new_laundry_dict = convert_to_dict_and_delete_element(
+        original_data=new_laundry)
     db_laundry = LaundryModel(**new_laundry_dict)
     db_laundry.laundry_id = laundry_id
     db.commit()
